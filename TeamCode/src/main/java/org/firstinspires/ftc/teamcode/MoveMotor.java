@@ -9,28 +9,36 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @Autonomous
 public class MoveMotor extends LinearOpMode {
+
+    DcMotor FrontLeftMotor;
+    DcMotor FrontRightMotor;
+    DcMotor BackLeftMotor;
+    DcMotor BackRightMotor;
+
+
     @Override
     public void runOpMode() throws InterruptedException {
-
-
-        DcMotor FrontLeftMotor = null;
-        DcMotor FrontRightMotor = null;
-        DcMotor BackLeftMotor = null;
-        DcMotor BackRightMotor = null;
-        //test
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+        // Wait for the game to start (driver presses PLAY)
+        waitForStart();
         FrontLeftMotor = hardwareMap.get(DcMotor.class, "30");
         FrontRightMotor = hardwareMap.get(DcMotor.class, "22");
         BackLeftMotor = hardwareMap.get(DcMotor.class, "23");
         BackRightMotor = hardwareMap.get(DcMotor.class, "31");
+        moveForward(0.1,1000);
+
+
 
 
 
 
     }
-    /*public void moveForward(double power, double time){
-        FrontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+    public void moveForward(double power, int time) {
+
+        FrontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         FrontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        BackLeft    Motor.setDirection(DcMotorSimple.Direction.REVERSE);
+        BackLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         BackRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         FrontLeftMotor.setPower(power);
@@ -42,7 +50,6 @@ public class MoveMotor extends LinearOpMode {
         FrontRightMotor.setPower(0);
         BackLeftMotor.setPower(0);
         BackRightMotor.setPower(0);
-
-     */
+    }
 
 }
