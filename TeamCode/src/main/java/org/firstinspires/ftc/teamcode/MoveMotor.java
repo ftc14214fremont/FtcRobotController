@@ -17,7 +17,7 @@ public class MoveMotor extends LinearOpMode {
         DcMotor FrontRightMotor = null;
         DcMotor BackLeftMotor = null;
         DcMotor BackRightMotor = null;
-
+        //test
         FrontLeftMotor = hardwareMap.get(DcMotor.class, "30");
         FrontRightMotor = hardwareMap.get(DcMotor.class, "22");
         BackLeftMotor = hardwareMap.get(DcMotor.class, "23");
@@ -30,7 +30,7 @@ public class MoveMotor extends LinearOpMode {
     /*public void moveForward(double power, double time){
         FrontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         FrontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        BackLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        BackLeft    Motor.setDirection(DcMotorSimple.Direction.REVERSE);
         BackRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         FrontLeftMotor.setPower(power);
