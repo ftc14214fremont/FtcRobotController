@@ -1,32 +1,31 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.PowerPlay.Auto;
+
+import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.MovementFunctions.moveBackward;
+import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.MovementFunctions.moveForward;
+import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.MovementFunctions.strafeLeft;
+import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.MovementFunctions.strafeRight;
+import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.*;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.firstinspires.ftc.teamcode.PowerPlay.Helpers.MovementFunctions.*;
+
 
 
 @Autonomous
 public class MoveMotor extends LinearOpMode {
 
-    DcMotor FrontLeftMotor;
-    DcMotor FrontRightMotor;
-    DcMotor BackLeftMotor;
-    DcMotor BackRightMotor;
-
-
     @Override
     public void runOpMode() throws InterruptedException {
+        initializeNvyusRobotHardware(this);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-        // Wait for the game to start (driver presses PLAY)
+
         waitForStart();
-        FrontLeftMotor = hardwareMap.get(DcMotor.class, "30");
-        FrontRightMotor = hardwareMap.get(DcMotor.class, "22");
-        BackLeftMotor = hardwareMap.get(DcMotor.class, "23");
-        BackRightMotor = hardwareMap.get(DcMotor.class, "31");
-        moveForward(0.1,1000);
+        moveForward(0.5,1000, this);
+        strafeLeft(0.5,1000,this);
+        strafeRight(0.5,1000,this);
+        moveBackward(0.5,1000,this);
 
 
 
@@ -34,6 +33,7 @@ public class MoveMotor extends LinearOpMode {
 
 
     }
+    /*
     public void moveForward(double power, int time) {
 
         FrontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -51,5 +51,6 @@ public class MoveMotor extends LinearOpMode {
         BackLeftMotor.setPower(0);
         BackRightMotor.setPower(0);
     }
+    */
 
 }
