@@ -19,11 +19,14 @@ import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 
+import org.firstinspires.ftc.teamcode.PowerPlay.Tests.LinearSlidesTest;
+
 public class NvyusRobotHardware {
     public static DcMotorEx FrontLeftMotor;
     public static DcMotorEx FrontRightMotor;
     public static DcMotorEx BackLeftMotor;
     public static DcMotorEx BackRightMotor;
+    public static DcMotorEx LinearSlideMotor;
 
     public static void initializeNvyusRobotHardware(LinearOpMode opMode) {
         //altering some settings on rev hub, supposedly makes encoders update quicker
@@ -39,6 +42,8 @@ public class NvyusRobotHardware {
         BackLeftMotor = opMode.hardwareMap.get(DcMotorEx.class, "23");
         BackRightMotor = opMode.hardwareMap.get(DcMotorEx.class, "31");
 
+        LinearSlideMotor = opMode.hardwareMap.get(DcMotorEx.class, "20");
+
 
         //set zero power behavior
         FrontLeftMotor.setZeroPowerBehavior(BRAKE);
@@ -53,7 +58,8 @@ public class NvyusRobotHardware {
         BackLeftMotor.setDirection(FORWARD);
         BackRightMotor.setDirection(FORWARD);
 
-
+        //set linear slide direction
+        LinearSlideMotor.setDirection(FORWARD);
 
     }
 
