@@ -7,7 +7,6 @@ import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 
 import java.util.List;
 
@@ -40,8 +39,6 @@ public class NvyusRobotHardware {
         FrontRightMotor.setZeroPowerBehavior(BRAKE);
         BackLeftMotor.setZeroPowerBehavior(BRAKE);
         BackRightMotor.setZeroPowerBehavior(BRAKE);
-        Direction temp_a = REVERSE;
-        Direction temp_b =
 
 
         //set motor direction to move forward
