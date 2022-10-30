@@ -1,25 +1,15 @@
 package org.firstinspires.ftc.teamcode.PowerPlay.Helpers;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-
-
-
-
-
-import java.util.List;
-
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
-import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 
-import org.firstinspires.ftc.teamcode.PowerPlay.Tests.LinearSlidesTest;
+import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
+
+import java.util.List;
 
 public class NvyusRobotHardware {
     public static DcMotorEx FrontLeftMotor;
@@ -50,6 +40,8 @@ public class NvyusRobotHardware {
         FrontRightMotor.setZeroPowerBehavior(BRAKE);
         BackLeftMotor.setZeroPowerBehavior(BRAKE);
         BackRightMotor.setZeroPowerBehavior(BRAKE);
+        Direction temp_a = REVERSE;
+        Direction temp_b =
 
 
         //set motor direction to move forward
