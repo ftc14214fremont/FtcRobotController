@@ -17,7 +17,7 @@ public class LinearSlidesTest extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
-        liftArmUp(1,2000, this);
+        liftArmUp(1,4000, this);
         sleep(500);
         liftArmDown(1,2000, this);
     }
