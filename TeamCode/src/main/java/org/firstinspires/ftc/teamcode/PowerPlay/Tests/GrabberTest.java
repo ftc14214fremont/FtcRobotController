@@ -7,8 +7,9 @@ import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardwar
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@Autonomous
+@TeleOp
 public class GrabberTest extends LinearOpMode {
 
     public static final double INCREMENT = 0.01;     // amount to slew servo each CYCLE_MS cycle
