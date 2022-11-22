@@ -29,10 +29,10 @@ public class NvyusRobotHardware {
         }
 
         //initialize motor hardware map
-        FrontLeftMotor = opMode.hardwareMap.get(DcMotorEx.class, "30");
-        FrontRightMotor = opMode.hardwareMap.get(DcMotorEx.class, "22");
+        FrontLeftMotor = opMode.hardwareMap.get(DcMotorEx.class, "22");
+        FrontRightMotor = opMode.hardwareMap.get(DcMotorEx.class, "31");
         BackLeftMotor = opMode.hardwareMap.get(DcMotorEx.class, "23");
-        BackRightMotor = opMode.hardwareMap.get(DcMotorEx.class, "31");
+        BackRightMotor = opMode.hardwareMap.get(DcMotorEx.class, "30");
 
         LinearSlideMotor = opMode.hardwareMap.get(DcMotorEx.class, "20");
         GrabberServo = opMode.hardwareMap.get(Servo.class, "grabber");
