@@ -18,15 +18,7 @@ public class SleeveDetection extends LinearOpMode {
 
     // variables
     OpenCvInternalCamera phoneCam;
-    NvyusAprilTagPipeline pipeline;
-
-    double fx = 578.272;
-    double fy = 578.272;
-    double cx = 402.145;
-    double cy = 221.506;
-
-    // UNITS ARE METERS
-    double tagsize = 0.166;
+    NvyusPipeline pipeline;
 
     @Override
         public void runOpMode() {
@@ -37,7 +29,7 @@ public class SleeveDetection extends LinearOpMode {
         phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
 
         // attaching a pipeline (the OpenCV processing)
-        pipeline = new NvyusAprilTagPipeline(tagsize, fx, fy, cx, cy);
+        pipeline = new NvyusPipeline();
         phoneCam.setPipeline(pipeline);
 
         // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
