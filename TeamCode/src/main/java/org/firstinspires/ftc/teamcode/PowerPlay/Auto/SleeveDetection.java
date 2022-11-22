@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.internal.camera.WebcamExample;
+import org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusAprilTagPipeline;
 import org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusPipeline;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
@@ -17,7 +18,15 @@ public class SleeveDetection extends LinearOpMode {
 
     // variables
     OpenCvInternalCamera phoneCam;
-    NvyusPipeline pipeline;
+    NvyusAprilTagPipeline pipeline;
+
+    double fx = 578.272;
+    double fy = 578.272;
+    double cx = 402.145;
+    double cy = 221.506;
+
+    // UNITS ARE METERS
+    double tagsize = 0.166;
 
     @Override
         public void runOpMode() {
@@ -28,7 +37,7 @@ public class SleeveDetection extends LinearOpMode {
         phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
 
         // attaching a pipeline (the OpenCV processing)
-        pipeline = new NvyusPipeline();
+        pipeline = new NvyusAprilTagPipeline(tagsize, fx, fy, cx, cy);
         phoneCam.setPipeline(pipeline);
 
         // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
