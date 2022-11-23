@@ -67,6 +67,16 @@ public class NvyusAprilTagPipeline extends OpenCvPipeline
     private boolean needToSetDecimation;
     private final Object decimationSync = new Object();
 
+    int LEFT = 0;
+    int MIDDLE = 1;
+    int RIGHT = 2;
+
+    private static volatile int position = 1;
+
+    public static int getSleevePosition() {
+        return position;
+    }
+
     public NvyusAprilTagPipeline(double tagsize, double fx, double fy, double cx, double cy)
     {
         this.tagsize = tagsize;
@@ -131,7 +141,32 @@ public class NvyusAprilTagPipeline extends OpenCvPipeline
             draw3dCubeMarker(input, tagsizeX, tagsizeX, tagsizeY, 5, pose.rvec, pose.tvec, cameraMatrix);
         }
 
+        AprilTagDetection tagOfInterest = null;
+        ArrayList<AprilTagDetection> currentDetections = detections;
+
+        for (AprilTagDetection tag : currentDetections) {
+                if (tag.id == LEFT || tag.id == RIGHT || tag.id == MIDDLE) {
+                    tagOfInterest = tag;
+                    break;
+                }
+
+        }
+
+        if (tagOfInterest == null || tagOfInterest.id == LEFT) {
+            position = 0;
+        } else if (tagOfInterest.id == MIDDLE) {
+            position = 1;
+        } else {
+            position = 2;
+        }
+
         return input;
+    }
+
+    public enum SleevePosition {
+        LEFT,
+        MIDDLE,
+        RIGHT
     }
 
     public void setDecimation(float decimation)
@@ -309,4 +344,5 @@ public class NvyusAprilTagPipeline extends OpenCvPipeline
             this.tvec = tvec;
         }
     }
+
 }

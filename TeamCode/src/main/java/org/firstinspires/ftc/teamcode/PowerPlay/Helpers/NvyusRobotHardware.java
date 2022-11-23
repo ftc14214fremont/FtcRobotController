@@ -11,6 +11,11 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import java.util.List;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
+
 
 public class NvyusRobotHardware {
     public static DcMotorEx FrontLeftMotor;
@@ -57,4 +62,37 @@ public class NvyusRobotHardware {
 
     }
 
+    public static void initializeNvyusRobotCamera(LinearOpMode opMode) {
+        OpenCvCamera camera;
+        NvyusAprilTagPipeline aprilTagDetectionPipeline;
+
+        double fx = 578.272*1.6;
+        double fy = 578.272*1.6;
+        double cx = 402.145*1.6;
+        double cy = 221.506*1.6;
+
+        // UNITS ARE METERS
+        double tagsize = 0.166;
+
+        int cameraMonitorViewId = opMode.hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", opMode.hardwareMap.appContext.getPackageName());
+        // creating an internal camera instance, set direction, and enter ID for live view
+        camera = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+        aprilTagDetectionPipeline = new NvyusAprilTagPipeline(tagsize, fx, fy, cx, cy);
+
+        camera.setPipeline(aprilTagDetectionPipeline);
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened()
+            {
+                camera.startStreaming(1280,720, OpenCvCameraRotation.UPRIGHT);
+            }
+
+            @Override
+            public void onError(int errorCode)
+            {
+
+            }
+        });
+    }
 }
