@@ -46,6 +46,7 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.encoderTicksTo
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kA;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kStatic;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
+import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.*;
 
 /*
  * Simple mecanum drive hardware implementation for REV hardware.
@@ -68,7 +69,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private TrajectoryFollower follower;
 
-    private DcMotorEx leftFront, leftRear, rightRear, rightFront;
+    private DcMotorEx FrontLeftMotor, BackLeftMotor, BackRightMotor, FrontRightMotor;
     private List<DcMotorEx> motors;
 
     private BNO055IMU imu;
@@ -116,12 +117,12 @@ public class SampleMecanumDrive extends MecanumDrive {
         // For example, if +Y in this diagram faces downwards, you would use AxisDirection.NEG_Y.
         // BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
-        leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
-        rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
-        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+        FrontLeftMotor = hardwareMap.get(DcMotorEx.class, "FrontLeftMotor");
+        BackLeftMotor = hardwareMap.get(DcMotorEx.class, "BackLeftMotor");
+        BackRightMotor = hardwareMap.get(DcMotorEx.class, "BackRightMotor");
+        FrontRightMotor = hardwareMap.get(DcMotorEx.class, "FrontRightMotor");
 
-        motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
+        motors = Arrays.asList(FrontLeftMotor, BackLeftMotor, BackRightMotor, FrontRightMotor);
 
         for (DcMotorEx motor : motors) {
             MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
@@ -285,10 +286,10 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     @Override
     public void setMotorPowers(double v, double v1, double v2, double v3) {
-        leftFront.setPower(v);
-        leftRear.setPower(v1);
-        rightRear.setPower(v2);
-        rightFront.setPower(v3);
+        FrontLeftMotor.setPower(v);
+        BackLeftMotor.setPower(v1);
+        BackRightMotor.setPower(v2);
+        FrontRightMotor.setPower(v3);
     }
 
     @Override

@@ -30,7 +30,7 @@ public class MoveMotor extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
 
         telemetry.update();
-
+/*
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         // We want to start the bot at x: 10, y: -8, heading: 90 degrees
@@ -45,7 +45,7 @@ public class MoveMotor extends LinearOpMode {
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
                 .splineTo(new Vector2d(20, 9), Math.toRadians(45))
                 .build();
-
+*/
         waitForStart();
 
         if (getSleevePosition() == 0) {
@@ -67,16 +67,11 @@ public class MoveMotor extends LinearOpMode {
 
         }
         /*
-        moveForward(0.5,1000, this);
-        strafeLeft(0.5,1000,this);
-        strafeRight(0.5,1000,this);
-        moveBackward(0.5,1000,this);
-        */
 
         drive.followTrajectory(traj1);
         drive.followTrajectory(traj2);
 
-
+*/
     }
     /*
     public void moveForward(double power, int time) {
