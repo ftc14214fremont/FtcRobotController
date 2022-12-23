@@ -6,6 +6,7 @@ import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class NvyusRobotHardware {
     public static DcMotorEx BackRightMotor;
     public static DcMotorEx LinearSlideMotor;
     public static Servo GrabberServo;
+    public static Servo ArmRotatorServo;
 
     public static void initializeNvyusRobotHardware(LinearOpMode opMode) {
         //altering some settings on rev hub, supposedly makes encoders update quicker
@@ -40,7 +42,8 @@ public class NvyusRobotHardware {
         BackRightMotor = opMode.hardwareMap.get(DcMotorEx.class, "30");
 
         LinearSlideMotor = opMode.hardwareMap.get(DcMotorEx.class, "20");
-        GrabberServo = opMode.hardwareMap.get(Servo.class, "grabber");
+        //GrabberServo = opMode.hardwareMap.get(Servo.class, "grabber");
+        ArmRotatorServo = opMode.hardwareMap.get(Servo.class, "servo30");
 
 
         //set zero power behavior
@@ -57,7 +60,8 @@ public class NvyusRobotHardware {
         BackRightMotor.setDirection(FORWARD);
 
         //set linear slide direction
-        LinearSlideMotor.setDirection(FORWARD);
+        LinearSlideMotor.setDirection(REVERSE); //for reverse, positive power is up
+        //LinearSlideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
 
     }
