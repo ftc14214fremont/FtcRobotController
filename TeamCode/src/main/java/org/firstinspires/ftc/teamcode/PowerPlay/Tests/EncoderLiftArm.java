@@ -21,7 +21,7 @@ public class EncoderLiftArm extends LinearOpMode {
 
         double currentPosition = LinearSlideMotor.getCurrentPosition();
 
-        while (opModeIsActive() && currentPosition < 7800) {
+        while (opModeIsActive() && currentPosition < 800) {
 
             LinearSlideMotor.setPower(.8);
             telemetry.addLine("pos: " + currentPosition);

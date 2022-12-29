@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.PowerPlay.Tests;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
+import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT;
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.ArmFunctions.liftArmUp;
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.ArmFunctions.liftArmDown;
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.LinearSlideMotor;
@@ -19,6 +20,7 @@ public class LinearSlidesTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         initializeNvyusRobotHardware(this);
         LinearSlideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        LinearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -26,14 +28,14 @@ public class LinearSlidesTest extends LinearOpMode {
 
         while (opModeIsActive()) {
             if (gamepad1.left_stick_y < -0.3) { //stick up go up
-                LinearSlideMotor.setPower(1);
+                LinearSlideMotor.setPower(0.5);
             }
             else if (gamepad1.left_stick_y > 0.3) { //stick down go down
-                LinearSlideMotor.setPower(-1);
+                LinearSlideMotor.setPower(-0.1);
             }
             else {
                 // do nothing
-                LinearSlideMotor.setZeroPowerBehavior(BRAKE);
+                LinearSlideMotor.setZeroPowerBehavior(FLOAT);
                 LinearSlideMotor.setVelocity(0);
             }
 
