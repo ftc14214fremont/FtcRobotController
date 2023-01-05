@@ -54,8 +54,8 @@ import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardwar
  */
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(9, 0, 1);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(7.5, 0, 0);
 
     public static double LATERAL_MULTIPLIER = 1.162703444525342;
 
@@ -70,7 +70,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private TrajectoryFollower follower;
 
-    private DcMotorEx FrontLeftMotor, BackLeftMotor, BackRightMotor, FrontRightMotor;
+    private DcMotorEx FrontLeftMotor, FrontRightMotor, BackLeftMotor, BackRightMotor;
     private List<DcMotorEx> motors;
 
     private BNO055IMU imu;

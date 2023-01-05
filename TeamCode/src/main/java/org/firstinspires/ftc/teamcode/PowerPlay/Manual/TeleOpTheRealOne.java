@@ -1,9 +1,13 @@
 package org.firstinspires.ftc.teamcode.PowerPlay.Manual;
+import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT;
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.BackLeftMotor;
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.BackRightMotor;
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.FrontLeftMotor;
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.FrontRightMotor;
+import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.Grabber;
+import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.LinearSlideMotor;
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.initializeNvyusRobotHardware;
+import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.SetVelocity.setSlidesVelocity;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -25,8 +29,8 @@ public class TeleOpTheRealOne extends LinearOpMode {
             double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
-            double lateral =  gamepad1.left_stick_x;
+            double axial   =  gamepad1.left_stick_x;  // Note: pushing stick forward gives negative value
+            double lateral =  gamepad1.left_stick_y;
             double yaw     =  gamepad1.right_stick_x;
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
@@ -56,6 +60,30 @@ public class TeleOpTheRealOne extends LinearOpMode {
             FrontRightMotor.setPower(rightFrontPower);
             BackLeftMotor.setPower(leftBackPower);
             BackRightMotor.setPower(rightBackPower);
+
+
+            //linear slide + servo code
+
+            if (gamepad1.left_bumper) { //left go up
+                setSlidesVelocity(LinearSlideMotor, 0.8);
+            } else if (gamepad1.right_bumper) { //tap to make linear slide stop during retract
+                setSlidesVelocity(LinearSlideMotor, 0.1);
+            }
+            else {
+                LinearSlideMotor.setZeroPowerBehavior(FLOAT);
+                setSlidesVelocity(LinearSlideMotor, 0);
+            }
+
+            if (gamepad1.a) { //close grabber
+                Grabber.setPosition(0.25);
+            }
+            else if (gamepad1.b) { //open grabber
+                Grabber.setPosition(0.6);
+            }
+            telemetry.addLine("position: " + LinearSlideMotor.getCurrentPosition());
+            telemetry.update();
+
+
         }
     }
 }

@@ -24,8 +24,7 @@ public class NvyusRobotHardware {
     public static DcMotorEx BackLeftMotor;
     public static DcMotorEx BackRightMotor;
     public static DcMotorEx LinearSlideMotor;
-    public static Servo GrabberServo;
-    public static Servo ArmRotatorServo;
+    public static Servo Grabber;
 
     public static void initializeNvyusRobotHardware(LinearOpMode opMode) {
         //altering some settings on rev hub, supposedly makes encoders update quicker
@@ -43,7 +42,7 @@ public class NvyusRobotHardware {
 
         LinearSlideMotor = opMode.hardwareMap.get(DcMotorEx.class, "20");
         //GrabberServo = opMode.hardwareMap.get(Servo.class, "grabber");
-        ArmRotatorServo = opMode.hardwareMap.get(Servo.class, "servo30");
+        Grabber = opMode.hardwareMap.get(Servo.class, "servo35");
 
 
         //set zero power behavior

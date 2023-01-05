@@ -4,8 +4,10 @@ import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT;
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.ArmFunctions.liftArmUp;
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.ArmFunctions.liftArmDown;
+import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.Grabber;
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.LinearSlideMotor;
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.initializeNvyusRobotHardware;
+import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.SetVelocity.*;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -28,21 +30,26 @@ public class LinearSlidesTest extends LinearOpMode {
 
         while (opModeIsActive()) {
             if (gamepad1.left_stick_y < -0.3) { //stick up go up
-                LinearSlideMotor.setPower(0.5);
-            }
-            else if (gamepad1.left_stick_y > 0.3) { //stick down go down
-                LinearSlideMotor.setPower(-0.1);
+                setSlidesVelocity(LinearSlideMotor, 0.8);
+            } else if (gamepad1.left_stick_y > 0.3) { //stick down then do nothing except prevent
+                // motor from overturning
+                    setSlidesVelocity(LinearSlideMotor, 0.1);
             }
             else {
-                // do nothing
                 LinearSlideMotor.setZeroPowerBehavior(FLOAT);
-                LinearSlideMotor.setVelocity(0);
+                setSlidesVelocity(LinearSlideMotor, 0);
             }
 
+            if (gamepad1.a) { //open
+                Grabber.setPosition(0.25);
+            }
+            else if (gamepad1.b) { //open
+                Grabber.setPosition(0.6);
+            }
             telemetry.addLine("position: " + LinearSlideMotor.getCurrentPosition());
             telemetry.update();
-            }
         }
-
     }
+
+}
 
