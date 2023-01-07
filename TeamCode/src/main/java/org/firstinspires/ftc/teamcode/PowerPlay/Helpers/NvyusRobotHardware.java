@@ -6,7 +6,6 @@ import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import java.util.List;
@@ -23,7 +22,8 @@ public class NvyusRobotHardware {
     public static DcMotorEx FrontRightMotor;
     public static DcMotorEx BackLeftMotor;
     public static DcMotorEx BackRightMotor;
-    public static DcMotorEx LinearSlideMotor;
+    public static DcMotorEx LSMotor1;
+    public static DcMotorEx LSMotor2;
     public static Servo Grabber;
 
     public static void initializeNvyusRobotHardware(LinearOpMode opMode) {
@@ -40,7 +40,8 @@ public class NvyusRobotHardware {
         BackLeftMotor = opMode.hardwareMap.get(DcMotorEx.class, "23");
         BackRightMotor = opMode.hardwareMap.get(DcMotorEx.class, "30");
 
-        LinearSlideMotor = opMode.hardwareMap.get(DcMotorEx.class, "20");
+        LSMotor1 = opMode.hardwareMap.get(DcMotorEx.class, "20");
+        LSMotor2 = opMode.hardwareMap.get(DcMotorEx.class, "33");
         //GrabberServo = opMode.hardwareMap.get(Servo.class, "grabber");
         Grabber = opMode.hardwareMap.get(Servo.class, "servo35");
 
@@ -58,9 +59,11 @@ public class NvyusRobotHardware {
         BackLeftMotor.setDirection(FORWARD);
         BackRightMotor.setDirection(FORWARD);
 
-        //set linear slide direction
-        LinearSlideMotor.setDirection(REVERSE); //for reverse, positive power is up
-        //LinearSlideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        //set linear slide settings
+        LSMotor1.setDirection(REVERSE); //for reverse, positive power is up
+//        LSMotor1.setZeroPowerBehavior(BRAKE);
+//        LSMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
 
     }

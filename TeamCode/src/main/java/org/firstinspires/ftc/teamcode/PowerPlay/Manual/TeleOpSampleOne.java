@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp
-public class TeleOpTheRealOne extends LinearOpMode {
+public class TeleOpSampleOne extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     @Override
     public void runOpMode() {
@@ -61,14 +61,12 @@ public class TeleOpTheRealOne extends LinearOpMode {
 
             if (gamepad1.left_bumper) { //left go up
                 setSlidesVelocity(LSMotor1, 0.8);
-                setSlidesVelocity(LSMotor2, 0.8);
             } else if (gamepad1.right_bumper) { //tap to make linear slide stop during retract
                 setSlidesVelocity(LSMotor1, -0.4);
             }
             else {
                 LSMotor1.setZeroPowerBehavior(FLOAT);
                 setSlidesVelocity(LSMotor1, 0);
-                setSlidesVelocity(LSMotor2, 0);
             }
 
             if (gamepad1.a) { //close grabber

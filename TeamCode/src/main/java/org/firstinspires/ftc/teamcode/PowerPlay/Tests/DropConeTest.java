@@ -6,7 +6,6 @@ import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.SetVelocity.setSl
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @Autonomous
@@ -17,34 +16,34 @@ public class DropConeTest extends LinearOpMode {
         initializeNvyusRobotHardware(this);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-        LinearSlideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        LinearSlideMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        LSMotor1.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        LSMotor1.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
         waitForStart();
 
 
-        double currentPosition = LinearSlideMotor.getCurrentPosition();
+        double currentPosition = LSMotor1.getCurrentPosition();
 
         Grabber.setPosition(0.25);
         sleep(1000);
         while (opModeIsActive() && currentPosition < 770) {
 
-            setSlidesVelocity(LinearSlideMotor, .8);
+            setSlidesVelocity(LSMotor1, .8);
             telemetry.addLine("pos: " + currentPosition);
             telemetry.update();
-            currentPosition = LinearSlideMotor.getCurrentPosition();
+            currentPosition = LSMotor1.getCurrentPosition();
         }
         moveForward(0.3,500,this);
         Grabber.setPosition(0.6);
         while (opModeIsActive() && currentPosition > 450) {
-            setSlidesVelocity(LinearSlideMotor, 0);
+            setSlidesVelocity(LSMotor1, 0);
             telemetry.addLine("pos: " + currentPosition);
             telemetry.update();
-            currentPosition = LinearSlideMotor.getCurrentPosition();
+            currentPosition = LSMotor1.getCurrentPosition();
         }
-        setSlidesVelocity(LinearSlideMotor,.1);
+        setSlidesVelocity(LSMotor1,.1);
         sleep(500);
-        setSlidesVelocity(LinearSlideMotor,0);
+        setSlidesVelocity(LSMotor1,0);
 
     }
 

@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.PowerPlay.Helpers;
 
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
-import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.LinearSlideMotor;
+import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.LSMotor1;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,30 +10,30 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class ArmFunctions {
 
     public static void liftArmUp(double power, int time, LinearOpMode opMode) {
-        LinearSlideMotor.setDirection(REVERSE);
+        LSMotor1.setDirection(REVERSE);
 
         //set power to motor
-        LinearSlideMotor.setPower(power);
+        LSMotor1.setPower(power);
 
         opMode.sleep(time);
 
-        LinearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        LinearSlideMotor.setPower(0);
+        LSMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        LSMotor1.setPower(0);
 
         opMode.sleep(100);
 
     }
 
     public static void liftArmDown(double power, int time, LinearOpMode opMode) {
-        LinearSlideMotor.setDirection(FORWARD);
+        LSMotor1.setDirection(FORWARD);
 
         //set power to motor
-        LinearSlideMotor.setPower(power);
+        LSMotor1.setPower(power);
 
         opMode.sleep(time);
 
-        LinearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        LinearSlideMotor.setPower(0);
+        LSMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        LSMotor1.setPower(0);
 
         opMode.sleep(100);
 
