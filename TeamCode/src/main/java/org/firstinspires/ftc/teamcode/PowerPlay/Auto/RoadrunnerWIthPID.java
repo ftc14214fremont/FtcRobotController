@@ -23,16 +23,19 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Config
 @Autonomous
-public class RoadrunnerTest extends LinearOpMode {
+public class RoadrunnerWIthPID extends LinearOpMode {
 
-    public static double TopConeTime = 0.9;
-    public static double incrementPerConeLevel = 0.1;
-
-    // coordinates
-    public static double junctionX = -8;
-    public static double junctionY = -27;
-    public static double coneX = -4;
-    public static double coneY = -63;
+    // trajectory vars
+    Trajectory StartingCone;
+    Trajectory GrabCone1;
+    Trajectory GrabCone2;
+    Trajectory GrabCone3;
+    Trajectory DropCone1;
+    Trajectory DropCone2;
+    Trajectory DropCone3;
+    Trajectory Park0;
+    Trajectory Park1;
+    Trajectory Park2;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -49,6 +52,14 @@ public class RoadrunnerTest extends LinearOpMode {
         LSMotor1.setDirection(REVERSE);
 
 
+        double TopConeTime = 0.9;
+        double incrementPerConeLevel = 0.1;
+
+        // coordinates
+        double junctionX = -8;
+        double junctionY = -27;
+        double coneX = -4;
+        double coneY = -63;
 
         // define starting position (Pose)
         Pose2d startingPose = new Pose2d(-60, -36, 0);
@@ -57,24 +68,19 @@ public class RoadrunnerTest extends LinearOpMode {
         drive.setPoseEstimate(startingPose);
 
         // robot drives to junction with cone and drops
-        Trajectory StartingCone = drive.trajectoryBuilder(startingPose)
+        StartingCone = drive.trajectoryBuilder(startingPose)
                 .splineToConstantHeading(new Vector2d(-54, -16), 0)
                 .forward(31.5)
                 .splineToConstantHeading(new Vector2d(junctionX, junctionY), 0)
                 .addDisplacementMarker(() -> { //run after spline
-                    setSlidesVelocity(LSMotor1, -0.2);
-                    setSlidesVelocity(LSMotor2, 0);
                     Grabber.setPosition(openPosition);
                 })
+                .addDisplacementMarker(() -> drive.followTrajectoryAsync(GrabCone1))
                 .build(); // makes the trajectory
 
         // robot goes to cone, drops linear slides, and grabs cone
-        Trajectory GrabCone1 = drive.trajectoryBuilder(StartingCone.end())
+        GrabCone1 = drive.trajectoryBuilder(StartingCone.end())
                 // path to cone
-                .addTemporalMarker(0, () -> {
-                    setSlidesVelocity(LSMotor1, 0.8);
-                    setSlidesVelocity(LSMotor2, 0.8);
-                })
                 .lineToLinearHeading(new Pose2d(coneX, coneY, -Math.toRadians(90))) // <- change this to correct coordinates to grab cone
                 // drop linear slides
                 .addTemporalMarker(0.5, () -> {
@@ -89,27 +95,23 @@ public class RoadrunnerTest extends LinearOpMode {
                 .addDisplacementMarker(() -> {
                     Grabber.setPosition(closePosition);
                 })
+                .addDisplacementMarker(() -> drive.followTrajectoryAsync(DropCone1))
                 .build();
 
         // go back to junction and drop cone
-        Trajectory DropCone1 = drive.trajectoryBuilder(GrabCone1.end())
+        DropCone1 = drive.trajectoryBuilder(GrabCone1.end())
                 .lineToLinearHeading(new Pose2d(junctionX, junctionY, 0))
                 .addTemporalMarker(0.5, () -> {
                     setSlidesVelocity(LSMotor1, 0.8);
                     setSlidesVelocity(LSMotor2, 0.8);
                 })
                 .addDisplacementMarker(() -> { //run after spline
-                    setSlidesVelocity(LSMotor1, -0.2);
-                    setSlidesVelocity(LSMotor2, 0);
                     Grabber.setPosition(openPosition);
                 })
+                .addDisplacementMarker(() -> drive.followTrajectoryAsync(GrabCone2))
                 .build();
 
-        Trajectory GrabCone2 = drive.trajectoryBuilder(DropCone1.end())
-                .addTemporalMarker(0, () -> {
-                    setSlidesVelocity(LSMotor1, 0.8);
-                    setSlidesVelocity(LSMotor2, 0.8);
-                })
+        GrabCone2 = drive.trajectoryBuilder(DropCone1.end())
                 .lineToLinearHeading(new Pose2d(coneX, coneY, -Math.toRadians(90)))
                 .addTemporalMarker(0.5, () -> {
                     setSlidesVelocity(LSMotor1, -0.4);
@@ -119,28 +121,24 @@ public class RoadrunnerTest extends LinearOpMode {
                     setSlidesVelocity(LSMotor1, 0);
                 })
                 .addDisplacementMarker(() -> { //run after spline
-                    Grabber.setPosition(closePosition);
+                    Grabber.setPosition(openPosition);
                 })
+                .addDisplacementMarker(() -> drive.followTrajectoryAsync(DropCone2))
                 .build();
 
-        Trajectory DropCone2 = drive.trajectoryBuilder(GrabCone2.end())
+        DropCone2 = drive.trajectoryBuilder(GrabCone2.end())
                 .lineToLinearHeading(new Pose2d(junctionX, junctionY, 0))
                 .addTemporalMarker(0.5, () -> {
                     setSlidesVelocity(LSMotor1, 0.8);
                     setSlidesVelocity(LSMotor2, 0.8);
                 })
                 .addDisplacementMarker(() -> { //run after spline
-                    setSlidesVelocity(LSMotor1, -0.2);
-                    setSlidesVelocity(LSMotor2, 0);
                     Grabber.setPosition(openPosition);
                 })
+                .addDisplacementMarker(() -> drive.followTrajectoryAsync(GrabCone3))
                 .build();
 
-        Trajectory GrabCone3 = drive.trajectoryBuilder(DropCone2.end())
-                .addTemporalMarker(0, () -> {
-                    setSlidesVelocity(LSMotor1, 0.8);
-                    setSlidesVelocity(LSMotor2, 0.8);
-                })
+        GrabCone3 = drive.trajectoryBuilder(DropCone2.end())
                 .lineToLinearHeading(new Pose2d(coneX, coneY, -Math.toRadians(90)))
                 .addTemporalMarker(0.5, () -> {
                     setSlidesVelocity(LSMotor1, -0.4);
@@ -150,32 +148,46 @@ public class RoadrunnerTest extends LinearOpMode {
                     setSlidesVelocity(LSMotor1, 0);
                 })
                 .addDisplacementMarker(() -> { //run after spline
-                    Grabber.setPosition(closePosition);
+                    Grabber.setPosition(openPosition);
                 })
+                .addDisplacementMarker(() -> drive.followTrajectoryAsync(DropCone3))
                 .build();
 
-        Trajectory DropCone3 = drive.trajectoryBuilder(GrabCone2.end())
+        DropCone3 = drive.trajectoryBuilder(GrabCone3.end())
                 .lineToLinearHeading(new Pose2d(junctionX, junctionY, 0))
                 .addTemporalMarker(0.5, () -> {
                     setSlidesVelocity(LSMotor1, 0.8);
                     setSlidesVelocity(LSMotor2, 0.8);
                 })
                 .addDisplacementMarker(() -> { //run after spline
-                    setSlidesVelocity(LSMotor1, -0.2);
-                    setSlidesVelocity(LSMotor2, 0);
                     Grabber.setPosition(openPosition);
+                })
+                .addDisplacementMarker(() -> {
+                    if (getSleevePosition() == 0) {
+                        drive.followTrajectoryAsync(Park0);
+
+                    }
+                    if (getSleevePosition() == 1) {
+                        drive.followTrajectoryAsync(Park1);
+
+                    }
+                    if (getSleevePosition() == 2) {
+                        drive.followTrajectoryAsync(Park2);
+
+                    }
                 })
                 .build();
 
-        Trajectory Park0 = drive.trajectoryBuilder(DropCone3.end())
+
+        Park0 = drive.trajectoryBuilder(DropCone3.end())
                 .strafeLeft(10)
                 .build();
 
-        Trajectory Park1 = drive.trajectoryBuilder(DropCone3.end())
+        Park1 = drive.trajectoryBuilder(DropCone3.end())
                 .strafeRight(10)
                 .build();
 
-        Trajectory Park2 = drive.trajectoryBuilder(DropCone3.end())
+        Park2 = drive.trajectoryBuilder(DropCone3.end())
                 .strafeRight(30)
                 .build();
 
@@ -186,35 +198,16 @@ public class RoadrunnerTest extends LinearOpMode {
 
         waitForStart();
 
+        //follow Async trajectory
+        drive.followTrajectoryAsync(StartingCone);
+
         Grabber.setPosition(closePosition);
-        sleep(250);
-        setSlidesVelocity(LSMotor1, 0.8);
-        setSlidesVelocity(LSMotor2, 0.8);
-        drive.followTrajectory(StartingCone);
-        drive.followTrajectory(GrabCone1);
-        drive.followTrajectory(DropCone1);
-        drive.followTrajectory(GrabCone2);
-        drive.followTrajectory(DropCone2);
-        drive.followTrajectory(GrabCone3);
-        drive.followTrajectory(DropCone3);
 
-        if (getSleevePosition() == 0) {
-            telemetry.addData("Sleeve Position", "0");
-            telemetry.update();
-            drive.followTrajectory(Park0);
-
+        while (opModeIsActive()) {
+            drive.update();
         }
-        if (getSleevePosition() == 1) {
-            telemetry.addData("Sleeve Position", "1");
-            telemetry.update();
-            drive.followTrajectory(Park1);
 
-        }
-        if (getSleevePosition() == 2) {
-            telemetry.addData("Sleeve Position", "2");
-            telemetry.update();
-            drive.followTrajectory(Park2);
 
-        }
+
     }
 }

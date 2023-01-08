@@ -39,8 +39,8 @@ import java.util.ArrayList;
 
 public class NvyusAprilTagPipeline extends OpenCvPipeline
 {
+    Mat grey = new Mat();
     private long nativeApriltagPtr;
-    private Mat grey = new Mat();
     private ArrayList<AprilTagDetection> detections = new ArrayList<>();
 
     private ArrayList<AprilTagDetection> detectionsUpdate = new ArrayList<>();

@@ -26,6 +26,7 @@ public class NvyusRobotHardware {
     public static DcMotorEx LSMotor2;
     public static Servo Grabber;
 
+
     public static void initializeNvyusRobotHardware(LinearOpMode opMode) {
         //altering some settings on rev hub, supposedly makes encoders update quicker
         List<LynxModule> allHubs = opMode.hardwareMap.getAll(LynxModule.class);
@@ -55,8 +56,8 @@ public class NvyusRobotHardware {
 
         //set motor direction to move forward
         FrontLeftMotor.setDirection(REVERSE);
-        FrontRightMotor.setDirection(REVERSE);
-        BackLeftMotor.setDirection(FORWARD);
+        FrontRightMotor.setDirection(FORWARD);
+        BackLeftMotor.setDirection(REVERSE);
         BackRightMotor.setDirection(FORWARD);
 
         //set linear slide settings
@@ -69,6 +70,7 @@ public class NvyusRobotHardware {
     }
 
     public static void initializeNvyusRobotCamera(LinearOpMode opMode) {
+
         OpenCvCamera camera;
         NvyusAprilTagPipeline aprilTagDetectionPipeline;
 
@@ -82,7 +84,7 @@ public class NvyusRobotHardware {
 
         int cameraMonitorViewId = opMode.hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", opMode.hardwareMap.appContext.getPackageName());
         // creating an internal camera instance, set direction, and enter ID for live view
-        camera = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+        camera = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.FRONT, cameraMonitorViewId);
         aprilTagDetectionPipeline = new NvyusAprilTagPipeline(tagsize, fx, fy, cx, cy);
 
         camera.setPipeline(aprilTagDetectionPipeline);
@@ -92,6 +94,7 @@ public class NvyusRobotHardware {
             public void onOpened()
             {
                 camera.startStreaming(1280,720, OpenCvCameraRotation.UPRIGHT);
+
             }
 
             @Override
