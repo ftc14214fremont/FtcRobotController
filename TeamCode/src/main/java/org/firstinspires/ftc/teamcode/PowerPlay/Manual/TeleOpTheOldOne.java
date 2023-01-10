@@ -59,10 +59,10 @@ public class TeleOpTheOldOne extends LinearOpMode {
 
             //linear slide + servo code
 
-            if (gamepad1.left_bumper) { //left go up
+            if (gamepad2.left_bumper) { //left go up
                 setSlidesVelocity(LSMotor1, 0.8);
                 setSlidesVelocity(LSMotor2, 0.8);
-            } else if (gamepad1.right_bumper) { //tap to make linear slide stop during retract
+            } else if (gamepad2.right_bumper) { //tap to make linear slide stop during retract
                 setSlidesVelocity(LSMotor1, -0.4);
                 setSlidesVelocity(LSMotor2, -0.4);
             }
@@ -72,10 +72,10 @@ public class TeleOpTheOldOne extends LinearOpMode {
                 setSlidesVelocity(LSMotor2, 0);
             }
 
-            if (gamepad1.a) { //close grabber
+            if (gamepad2.a) { //close grabber
                 Grabber.setPosition(closePosition);
             }
-            else if (gamepad1.b) { //open grabber
+            else if (gamepad2.b) { //open grabber
                 Grabber.setPosition(openPosition);
             }
             telemetry.addLine("position: " + LSMotor1.getCurrentPosition());
