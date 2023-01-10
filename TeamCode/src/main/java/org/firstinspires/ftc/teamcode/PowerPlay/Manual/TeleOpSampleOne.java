@@ -54,8 +54,14 @@ public class TeleOpSampleOne extends LinearOpMode {
 
         initializeNvyusRobotHardware(this);
 
-        double currentPosition = LSMotor1.getCurrentPosition();
+        // Set Motor power to zero
         LSMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LSMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        int currentPosition = LSMotor1.getCurrentPosition();
+
+        int zeroPosition = LSMotor1.getCurrentPosition();
+        LSMotor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -108,31 +114,40 @@ public class TeleOpSampleOne extends LinearOpMode {
             rightFrontPower = gamepad1.y ? 1.0 : 0.0;  // Y gamepad
             rightBackPower = gamepad1.b ? 1.0 : 0.0;  // B gamepad*/
 
-
+            double slow_multiplier = Math.max(1-gamepad1.right_trigger,0.3);
             // Send calculated power to wheels
-            FrontLeftMotor.setPower(leftFrontPower * .5);
-            FrontRightMotor.setPower(rightFrontPower * .5);
-            BackLeftMotor.setPower(leftBackPower * .5);
-            BackRightMotor.setPower(rightBackPower * .5);
+            FrontLeftMotor.setPower(leftFrontPower * .5*slow_multiplier);
+            FrontRightMotor.setPower(rightFrontPower * .5*slow_multiplier);
+            BackLeftMotor.setPower(leftBackPower * .5*slow_multiplier);
+            BackRightMotor.setPower(rightBackPower * .5*slow_multiplier);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
-            telemetry.update();
 
+            int increase_amount;
+            if (gamepad2.left_stick_y < -0.3 || gamepad2.left_stick_y > 0.3) { //left go up
+                increase_amount = -Math.round(gamepad2.left_stick_y) * 100;
+//                setSlidesVelocity(LSMotor1, 0.8);
+//                setSlidesVelocity(LSMotor2, 0.8);
+//            } else if (gamepad2.left_stick_y > 0.3) { // down retract
+//                setSlidesVelocity(LSMotor1, -0.4);
+//                setSlidesVelocity(LSMotor2, -0.4);
+//            } else {
 
-            if (gamepad2.left_stick_y < -0.3) { //left go up
-                setSlidesVelocity(LSMotor1, 0.8);
-                setSlidesVelocity(LSMotor2, 0.8);
-            } else if (gamepad2.left_stick_y > 0.3) { // down retract
-                setSlidesVelocity(LSMotor1, -0.4);
-                setSlidesVelocity(LSMotor2, -0.4);
-            } else {
-                LSMotor1.setZeroPowerBehavior(FLOAT);
-                setSlidesVelocity(LSMotor1, 0);
-                setSlidesVelocity(LSMotor2, 0);
+//                LSMotor1.setZeroPowerBehavior(FLOAT);
+//                setSlidesVelocity(LSMotor1, 0);
+//                setSlidesVelocity(LSMotor2, 0);
             }
+            else{
+                increase_amount = 0;
+            }
+            int newPos = Math.max(currentPosition+increase_amount,zeroPosition);
+
+            LSMotor1.setTargetPosition(newPos);
+            LSMotor2.setTargetPosition(newPos);
+
 
             if (gamepad2.a) { //close grabber
                 Grabber.setPosition(closePosition);
@@ -140,17 +155,17 @@ public class TeleOpSampleOne extends LinearOpMode {
                 Grabber.setPosition(openPosition);
             }
 
-            if (gamepad2.x) { //break motor
-                LSMotor1.setZeroPowerBehavior(BRAKE);
-                LSMotor2.setZeroPowerBehavior(BRAKE);
-                setSlidesVelocity(LSMotor1, 0);
-                setSlidesVelocity(LSMotor2, 0);
-            }
+//            if (gamepad2.x) { //break motor
+//                LSMotor1.setZeroPowerBehavior(BRAKE);
+//                LSMotor2.setZeroPowerBehavior(BRAKE);
+//                setSlidesVelocity(LSMotor1, 0);
+//                setSlidesVelocity(LSMotor2, 0);
+//            }
 
-            if (currentPosition < 0) {
-                setSlidesVelocity(LSMotor1, 0.1);
-                setSlidesVelocity(LSMotor2, 0.1);
-            }
+//            if (currentPosition < 0) {
+//                setSlidesVelocity(LSMotor1, 0.1);
+//                setSlidesVelocity(LSMotor2, 0.1);
+//            }
 
             telemetry.addLine("pos: " + currentPosition);
             telemetry.update();
