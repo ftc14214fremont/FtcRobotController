@@ -28,14 +28,16 @@
  */
 package org.firstinspires.ftc.teamcode.PowerPlay.Manual;
 
-import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
-import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT;
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.Constants.closePosition;
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.Constants.openPosition;
-import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.*;
-import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.SetVelocity.setSlidesVelocity;
-
-
+import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.BackLeftMotor;
+import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.BackRightMotor;
+import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.FrontLeftMotor;
+import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.FrontRightMotor;
+import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.Grabber;
+import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.LSMotor1;
+import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.LSMotor2;
+import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.initializeNvyusRobotHardware;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -44,11 +46,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @TeleOp
-public class TeleOpSampleOne extends LinearOpMode {
+public class TeleOpPID extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
-
+    double prevTime = runtime.milliseconds();
     @Override
     public void runOpMode() {
 
@@ -123,6 +125,7 @@ public class TeleOpSampleOne extends LinearOpMode {
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Status", "Prev Time: " + String.valueOf(prevTime));
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
 
@@ -143,7 +146,8 @@ public class TeleOpSampleOne extends LinearOpMode {
             else{
                 increase_amount = 0;
             }
-            int newPos = Math.max(currentPosition+increase_amount,zeroPosition);
+            double deltaTime = runtime.milliseconds()-prevTime;
+            int newPos = Math.max(currentPosition+(int) Math.round(increase_amount*deltaTime),zeroPosition);
 
             LSMotor1.setTargetPosition(newPos);
             LSMotor2.setTargetPosition(newPos);
@@ -170,6 +174,7 @@ public class TeleOpSampleOne extends LinearOpMode {
             telemetry.addLine("pos: " + currentPosition);
             telemetry.update();
             currentPosition = LSMotor1.getCurrentPosition();
+            prevTime = runtime.milliseconds();
         }
     }
 }
