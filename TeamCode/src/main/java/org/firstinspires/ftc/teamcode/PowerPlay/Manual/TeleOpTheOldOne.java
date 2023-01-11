@@ -4,10 +4,12 @@ import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.Constants.*;
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.*;
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.SetVelocity.setSlidesVelocity;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+@Disabled
 @TeleOp
 public class TeleOpTheOldOne extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();

@@ -29,25 +29,25 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Config
 @Autonomous
-public class FinalAutoRedF2 extends LinearOpMode {
+public class FinalAutoBlueA2andRedF5 extends LinearOpMode {
 
     public static double TopConeTime = .95;
     public static double incrementPerConeLevel = 0.1;
     public static double DropConeTime = .15;
 
     // coordinates
-    public static double junctionX = 4.5;
+    public static double junctionX = -8;
     public static double junctionY = -30;
     public static double coneX = -8;
     public static double coneY = -64.0;
     public static double backDistance = 5;
 
     // new junction coords are (-13.1, -30)
-    public static double Park0x = 11;
+    public static double Park0x = -11;
     public static double Park0y = -15;
-    public static double Park1x = 11;
-    public static double Park1y = -42;
-    public static double Park2x = 9;
+    public static double Park1x = -11;
+    public static double Park1y = -45;
+    public static double Park2x = -9;
     public static double Park2y = -65;
 
     @Override
@@ -59,21 +59,21 @@ public class FinalAutoRedF2 extends LinearOpMode {
         // arm HW map
         LSMotor1 = hardwareMap.get(DcMotorEx.class, "20");
         LSMotor2 = hardwareMap.get(DcMotorEx.class, "33");
-        Grabber = hardwareMap.get(Servo.class, "servo35");
+        Grabber = hardwareMap.get(Servo.class, "servo33");
 
         LSMotor1.setDirection(REVERSE);
 
 
         // define starting position (Pose)
-        Pose2d startingPose = new Pose2d(60, -36, Math.toRadians(180));
+        Pose2d startingPose = new Pose2d(-60, -36, 0);
 
         // necessary to make sure encoder localization matches with starting Pose
         drive.setPoseEstimate(startingPose);
 
         // robot drives to junction with cone and drops
         TrajectorySequence trajectory = drive.trajectorySequenceBuilder(startingPose)
-                .lineToConstantHeading(new Vector2d(58, -16))
-                .forward(35.5)
+                .splineToConstantHeading(new Vector2d(-54, -16), 0)
+                .forward(31.5)
                 .splineToConstantHeading(new Vector2d(junctionX, junctionY), 0)
                 .addTemporalMarker(() -> { //run after spline
                     setSlidesVelocity(LSMotor1, -0.4);
@@ -165,7 +165,7 @@ public class FinalAutoRedF2 extends LinearOpMode {
         if (getSleevePosition() == 0) {
             telemetry.addData("Sleeve Position", "0");
             telemetry.update();
-            drive.followTrajectory(Park2);
+            drive.followTrajectory(Park0);
 
         }
         if (getSleevePosition() == 1) {
@@ -177,7 +177,7 @@ public class FinalAutoRedF2 extends LinearOpMode {
         if (getSleevePosition() == 2) {
             telemetry.addData("Sleeve Position", "2");
             telemetry.update();
-            drive.followTrajectory(Park0);
+            drive.followTrajectory(Park2);
 
         }
     }

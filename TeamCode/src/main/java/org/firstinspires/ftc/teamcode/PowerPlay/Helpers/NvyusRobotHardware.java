@@ -44,7 +44,7 @@ public class NvyusRobotHardware {
         LSMotor1 = opMode.hardwareMap.get(DcMotorEx.class, "20");
         LSMotor2 = opMode.hardwareMap.get(DcMotorEx.class, "33");
         //GrabberServo = opMode.hardwareMap.get(Servo.class, "grabber");
-        Grabber = opMode.hardwareMap.get(Servo.class, "servo35");
+        Grabber = opMode.hardwareMap.get(Servo.class, "servo33");
 
 
         //set zero power behavior

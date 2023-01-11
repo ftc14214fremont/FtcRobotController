@@ -6,11 +6,13 @@ import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardwar
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.initializeNvyusRobotHardware;
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.SetVelocity.*;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+@Disabled
 @TeleOp
 public class LinearSlidesTest extends LinearOpMode {
 

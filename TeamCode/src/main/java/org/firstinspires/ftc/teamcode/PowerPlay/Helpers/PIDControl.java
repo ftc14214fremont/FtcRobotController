@@ -7,6 +7,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -14,7 +15,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @Config
 @TeleOp
-public class PIDControl extends OpMode {
+public class PIDControl extends LinearOpMode {
     private PIDController controller;
 
     public static double p = 0.03, i = 0, d = 0.00015;
@@ -22,11 +23,11 @@ public class PIDControl extends OpMode {
 
     public static int target = 200;
 
-    private final double ticks_in_degrees = 360/145.1;
+    private final double ticks_in_degrees = 360 / 145.1;
 
 
     @Override
-    public void init() {
+    public void runOpMode() {
         controller = new PIDController(p, i, d);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -35,10 +36,35 @@ public class PIDControl extends OpMode {
 
         LSMotor1.setDirection(REVERSE);
 
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
+        waitForStart();
+
+        while (opModeIsActive()) {
+
+            controller.setPID(p, i, d);
+            int armPos = LSMotor1.getCurrentPosition();
+            double output = controller.calculate(armPos, target);
+            double ff = Math.cos(Math.toRadians(target / ticks_in_degrees)) * f;
+
+            double power = output;
+
+            LSMotor1.setPower(power);
+
+            telemetry.addData("pos: ", armPos);
+            telemetry.addData("target ", target);
+            telemetry.update();
+        }
     }
 
-    @Override
-    public void loop() {
+    public static void PIDTarget(int target, LinearOpMode opMode) {
+
+        PIDController controller = new PIDController(p, i, d);
+        MultipleTelemetry telemetry = new MultipleTelemetry(opMode.telemetry, FtcDashboard.getInstance().getTelemetry());
+
+        double ticks_in_degrees = 360 / 145.1;
+
         controller.setPID(p, i, d);
         int armPos = LSMotor1.getCurrentPosition();
         double output = controller.calculate(armPos, target);
@@ -53,4 +79,5 @@ public class PIDControl extends OpMode {
         telemetry.update();
 
     }
+
 }
