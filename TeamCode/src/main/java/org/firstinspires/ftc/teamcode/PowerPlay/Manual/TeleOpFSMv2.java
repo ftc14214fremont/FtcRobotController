@@ -28,6 +28,7 @@
  */
 package org.firstinspires.ftc.teamcode.PowerPlay.Manual;
 
+import  static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT;
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.Constants.closePosition;
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.Constants.groundEncoderCount;
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.Constants.lowEncoderCount;
@@ -42,6 +43,7 @@ import org.firstinspires.ftc.teamcode.PowerPlay.Helpers.PIDControl.*;
 
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -50,16 +52,18 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-
+@Config
 @TeleOp
 public class TeleOpFSMv2 extends LinearOpMode {
 
     private PIDController controller;
 
-    public static double p = 0.03, i = 0, d = 0.00015;
+    public static double p = 0.005, i = 0, d = 0.000;
     public static double f = 0.05;
 
     double ticks_in_degrees = 360 / 145.1;
+
+    public static int target1 = lowEncoderCount;
     
     int DEPOSIT_STATES = 0;
     // 0 = ground
@@ -76,8 +80,8 @@ public class TeleOpFSMv2 extends LinearOpMode {
     public void runOpMode() {
 
         initializeNvyusRobotHardware(this);
-
         double currentPosition = LSMotor1.getCurrentPosition();
+
 
 
         controller = new PIDController(p, i, d);
@@ -123,19 +127,22 @@ public class TeleOpFSMv2 extends LinearOpMode {
             BackLeftMotor.setPower(leftBackPower * .5*slow_multiplier);
             BackRightMotor.setPower(rightBackPower * .5*slow_multiplier);
 
-            currentPosition = LSMotor1.getCurrentPosition();
-            telemetry.addLine("position: " + LSMotor1.getCurrentPosition());
+            currentPosition = -LSMotor1.getCurrentPosition();
+//            telemetry.addLine("position: " + LSMotor1.getCurrentPosition());
+//            telemetry.update();
+
+            telemetry.addData("pos: ", currentPosition); // added this line and cut from PID function
+            telemetry.addData("target ", target1);
             telemetry.update();
 
-            total();
 
-            boolean grabber_open =  true;
-            if (gamepad1.left_bumper && grabber_open == true) { //close grabber
+
+            total(currentPosition);
+
+            if (gamepad1.left_bumper) { //close grabber
                 Grabber.setPosition(closePosition);
-                grabber_open = false;
-            } else if (gamepad1.left_bumper && grabber_open == false) { //open grabber
+            } else if (gamepad1.left_trigger > 0) { //open grabber
                 Grabber.setPosition(openPosition);
-                grabber_open = true;
             }
 
         }
@@ -146,49 +153,71 @@ public class TeleOpFSMv2 extends LinearOpMode {
         if (gamepad2.a){
             DEPOSIT_STATES = 0;
         }
-        if (gamepad2.x){
+        if (gamepad2.x && DEPOSIT_STATES < 1){
             DEPOSIT_STATES = 1;
         }
-        if (gamepad2.b){
+        if (gamepad2.b && DEPOSIT_STATES < 2){
             DEPOSIT_STATES = 2;
         }
-        if (gamepad2.y){
+        if (gamepad2.y && DEPOSIT_STATES < 3){
             DEPOSIT_STATES = 3;
         }
     }
 
-    public void moveToState(){
+    public void moveToState(double pos){
         switch (DEPOSIT_STATES){
             case 0:
-                PIDTarget2(groundEncoderCount);
-                break;
-            case 1:
-                PIDTarget2(lowEncoderCount);
-                break;
-            case 2:
-                PIDTarget2(medEncoderCount);
-                break;
-            case 3:
-                if (currentPosition < 300) {
-                    setSlidesVelocity(LSMotor1, 0.3);
-                    setSlidesVelocity(LSMotor2, 0.3);
-                }
-                else if (currentPosition < 700) {
-                    setSlidesVelocity(LSMotor1, 0.7);
-                    setSlidesVelocity(LSMotor2, 0.7);
+                if (gamepad2.left_stick_y < -0.3) { //left go up
+                    if (pos < 400) {
+                        setSlidesVelocity(LSMotor1, 0.3);
+                        setSlidesVelocity(LSMotor2, 0.3);
+                    }
+                    else if (pos < 800) {
+                        setSlidesVelocity(LSMotor1, 0.6);
+                        setSlidesVelocity(LSMotor2, 0.6);
+                    }
+                    else {
+                        setSlidesVelocity(LSMotor1, 0.8);
+                        setSlidesVelocity(LSMotor2, 0.8 );
+                    }
+                } else if (gamepad1.left_stick_y > 0.3) { //tap to make linear slide stop during retract
+                    setSlidesVelocity(LSMotor1, -0.1);
+                    setSlidesVelocity(LSMotor2, -0.1);
                 }
                 else {
-                    setSlidesVelocity(LSMotor1, 0.9);
-                    setSlidesVelocity(LSMotor2, 0.9 );
+                    LSMotor1.setZeroPowerBehavior(FLOAT);
+                    setSlidesVelocity(LSMotor1, 0);
+                    setSlidesVelocity(LSMotor2, 0);
                 }
-                PIDTarget2(topEncoderCount);
+
+                break;
+            case 1: // when a is pressed
+                if (pos <= lowEncoderCount + 50) { //50 is the tolerance
+                        PIDTarget2(lowEncoderCount);
+
+                    break;
+                }
+                break;
+            case 2:
+                if (pos <= medEncoderCount + 50) {
+                        PIDTarget2(medEncoderCount);
+
+                    break;
+                }
+                break;
+            case 3:
+                if (pos <= topEncoderCount + 50) {
+                     PIDTarget2(topEncoderCount);
+                    break;
+                }
                 break;
         }
+
     }
 
-    public void total(){
+    public void total(double pos1){
         controller2Buttons();
-        moveToState();
+        moveToState(pos1);
     }
     
     public void PIDTarget2(int target) {
@@ -201,10 +230,6 @@ public class TeleOpFSMv2 extends LinearOpMode {
 
         LSMotor1.setPower(-power/6);
         LSMotor2.setPower(-power/6);
-
-        telemetry.addData("pos: ", armPos);
-        telemetry.addData("target ", target);
-        telemetry.update();
 
     }
 

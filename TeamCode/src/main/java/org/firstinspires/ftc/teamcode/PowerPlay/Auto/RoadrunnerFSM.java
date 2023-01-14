@@ -1,5 +1,8 @@
 //package org.firstinspires.ftc.teamcode.PowerPlay.Auto;
 //
+//import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.Constants.*;
+//import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.*;
+//
 //import com.acmerobotics.roadrunner.geometry.Pose2d;
 //import com.acmerobotics.roadrunner.geometry.Vector2d;
 //import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -8,6 +11,7 @@
 //import com.qualcomm.robotcore.hardware.HardwareMap;
 //import com.qualcomm.robotcore.util.ElapsedTime;
 //
+//import org.firstinspires.ftc.teamcode.PowerPlay.Helpers.PoseStorage;
 //import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 //
 ///**
@@ -35,6 +39,7 @@
 //    // This is essentially just defines the possible steps our program will take
 //    enum State {
 //        StartingCone,
+//        BackOut,
 //        GrabCone1,
 //        GrabCone2,
 //        GrabCone3,
@@ -104,8 +109,8 @@
 //        // Then have it follow that trajectory
 //        // Make sure you use the async version of the commands
 //        // Otherwise it will be blocking and pause the program here until the trajectory finishes
-//        currentState = State.TRAJECTORY_1;
-//        drive.followTrajectoryAsync(trajectory1);
+//        currentState = State.StartingCone;
+//        drive.followTrajectoryAsync(StartingConePath);
 //
 //        while (opModeIsActive() && !isStopRequested()) {
 //            // Our state machine logic
@@ -114,30 +119,18 @@
 //
 //            // We essentially define the flow of the state machine through this switch statement
 //            switch (currentState) {
-//                case TRAJECTORY_1:
-//                    // Check if the drive class isn't busy
-//                    // `isBusy() == true` while it's following the trajectory
-//                    // Once `isBusy() == false`, the trajectory follower signals that it is finished
-//                    // We move on to the next state
-//                    // Make sure we use the async follow function
+//                case StartingCone:
+//                    // drive to starting cone
 //                    if (!drive.isBusy()) {
-//                        currentState = State.TRAJECTORY_2;
-//                        drive.followTrajectoryAsync(trajectory2);
+//                        currentState = State.GrabCone1Path;
+//                        drive.followTrajectoryAsync(GrabCone1Path);
 //                    }
+//
 //                    break;
-//                case TRAJECTORY_2:
-//                    // Check if the drive class is busy following the trajectory
-//                    // Move on to the next state, TURN_1, once finished
+//                case GrabCone1:
+//                    // strafe to cone
 //                    if (!drive.isBusy()) {
-//                        currentState = State.TURN_1;
-//                        drive.turnAsync(turnAngle1);
-//                    }
-//                    break;
-//                case TURN_1:
-//                    // Check if the drive class is busy turning
-//                    // If not, move onto the next state, TRAJECTORY_3, once finished
-//                    if (!drive.isBusy()) {
-//                        currentState = State.TRAJECTORY_3;
+//                        currentState = State.GrabCone2;
 //                        drive.followTrajectoryAsync(trajectory3);
 //                    }
 //                    break;
@@ -206,8 +199,25 @@
 //        }
 //
 //        public void update() {
-//            // Beep boop this is the lift update function
-//            // Assume this runs some PID controller for the lift
+//            if (currentState == State.StartingCone) {
+//                //PIDTarget(topState)
+//            }
+//            else if (currentState == State.GrabCone1) {
+//                //PIDTarget(first cone)
+//            }
+//            else if (currentState == State.GrabCone1) {
+//                //PIDTarget(first cone)
+//            }
+//            else if (currentState == State.GrabCone1) {
+//                //PIDTarget(first cone)
+//            }
+//            else if (currentState == State.GrabCone1) {
+//                //PIDTarget(first cone)
+//            }
+//            else if (currentState == State.GrabCone1) {
+//                //PIDTarget(first cone)
+//            }
 //        }
 //    }
+//
 //}

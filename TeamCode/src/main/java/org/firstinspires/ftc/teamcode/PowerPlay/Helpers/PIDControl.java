@@ -36,6 +36,7 @@ public class PIDControl extends LinearOpMode {
         LSMotor2 = hardwareMap.get(DcMotorEx.class, "33");
 
         LSMotor1.setDirection(FORWARD);
+        LSMotor2.setDirection(FORWARD);
 //        LSMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        LSMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -49,16 +50,19 @@ public class PIDControl extends LinearOpMode {
             controller.setPID(p, i, d);
             int armPos = -LSMotor1.getCurrentPosition();
             double output = controller.calculate(armPos, target);
-//            double ff = Math.cos(Math.toRadians(target / ticks_in_degrees)) * f;
+//        double ff = Math.cos(Math.toRadians(target / ticks_in_degrees)) * f;
 
             double power = output;
 
-            LSMotor1.setPower(power/2);
+            LSMotor1.setPower(-power/6);
+            LSMotor2.setPower(-power/6);
 
             telemetry.addData("pos: ", armPos);
             telemetry.addData("target ", target);
             telemetry.update();
+
         }
+
 
     }
 
