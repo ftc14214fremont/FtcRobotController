@@ -36,6 +36,7 @@ import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.Constants.openPos
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.Constants.topEncoderCount;
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.NvyusRobotHardware.*;
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.PIDControl.*;
+import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.SetVelocity.setSlidesVelocity;
 
 import org.firstinspires.ftc.teamcode.PowerPlay.Helpers.PIDControl.*;
 
@@ -46,6 +47,7 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -74,6 +76,9 @@ public class TeleOpFSMv2 extends LinearOpMode {
     public void runOpMode() {
 
         initializeNvyusRobotHardware(this);
+
+        double currentPosition = LSMotor1.getCurrentPosition();
+
 
         controller = new PIDController(p, i, d);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -118,11 +123,9 @@ public class TeleOpFSMv2 extends LinearOpMode {
             BackLeftMotor.setPower(leftBackPower * .5*slow_multiplier);
             BackRightMotor.setPower(rightBackPower * .5*slow_multiplier);
 
-            // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Status", "Prev Time: " + String.valueOf(prevTime));
-            telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
-            telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
+            currentPosition = LSMotor1.getCurrentPosition();
+            telemetry.addLine("position: " + LSMotor1.getCurrentPosition());
+            telemetry.update();
 
             total();
 
@@ -134,6 +137,7 @@ public class TeleOpFSMv2 extends LinearOpMode {
                 Grabber.setPosition(openPosition);
                 grabber_open = true;
             }
+
         }
 
         LSMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -165,6 +169,18 @@ public class TeleOpFSMv2 extends LinearOpMode {
                 PIDTarget2(medEncoderCount);
                 break;
             case 3:
+                if (currentPosition < 300) {
+                    setSlidesVelocity(LSMotor1, 0.3);
+                    setSlidesVelocity(LSMotor2, 0.3);
+                }
+                else if (currentPosition < 700) {
+                    setSlidesVelocity(LSMotor1, 0.7);
+                    setSlidesVelocity(LSMotor2, 0.7);
+                }
+                else {
+                    setSlidesVelocity(LSMotor1, 0.9);
+                    setSlidesVelocity(LSMotor2, 0.9 );
+                }
                 PIDTarget2(topEncoderCount);
                 break;
         }
@@ -179,12 +195,12 @@ public class TeleOpFSMv2 extends LinearOpMode {
         controller.setPID(p, i, d);
         int armPos = -LSMotor1.getCurrentPosition();
         double output = controller.calculate(armPos, target);
-        double ff = Math.cos(Math.toRadians(target / ticks_in_degrees)) * f;
+//        double ff = Math.cos(Math.toRadians(target / ticks_in_degrees)) * f;
 
         double power = output;
 
-        LSMotor1.setPower(power/3);
-        LSMotor2.setPower(power/3);
+        LSMotor1.setPower(-power/6);
+        LSMotor2.setPower(-power/6);
 
         telemetry.addData("pos: ", armPos);
         telemetry.addData("target ", target);
