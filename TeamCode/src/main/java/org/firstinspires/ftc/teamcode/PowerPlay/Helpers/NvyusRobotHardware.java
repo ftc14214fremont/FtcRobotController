@@ -60,8 +60,9 @@ public class NvyusRobotHardware {
         BackLeftMotor.setDirection(REVERSE);
         BackRightMotor.setDirection(FORWARD);
 
-        //set linear slide settings
-        LSMotor1.setDirection(REVERSE); //for reverse, positive power is up
+        //set linear slide
+        LSMotor1.setDirection(FORWARD); //for reverse, positive power is up
+        LSMotor2.setDirection(FORWARD);
 //        LSMotor1.setZeroPowerBehavior(BRAKE);
 //        LSMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 

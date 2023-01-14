@@ -4,18 +4,18 @@
  * are permitted (subject to the limitations in the disclaimer below) provided that
  * the following conditions are met:
  *
- * Redistributions of source code must retain the above copyright notice, this list
+ * Redistributions of source code must retain the above copyright notice,  list
  * of conditions and the following disclaimer.
  *
- * Redistributions in binary form must reproduce the above copyright notice, this
+ * Redistributions in binary form must reproduce the above copyright notice, 
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
  * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
+ * promote products derived from  software without specific prior written permission.
  *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
- * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY 
+ * LICENSE.  SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
@@ -24,7 +24,7 @@
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * OF  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.firstinspires.ftc.teamcode.PowerPlay.Manual;
 
@@ -50,8 +50,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @TeleOp
-public class TeleOpFSM extends LinearOpMode {
+public class TeleOpFSMv2 extends LinearOpMode {
 
+    private PIDController controller;
+
+    public static double p = 0.03, i = 0, d = 0.00015;
+    public static double f = 0.05;
+
+    double ticks_in_degrees = 360 / 145.1;
+    
     int DEPOSIT_STATES = 0;
     // 0 = ground
     // 1 = low
@@ -67,6 +74,10 @@ public class TeleOpFSM extends LinearOpMode {
     public void runOpMode() {
 
         initializeNvyusRobotHardware(this);
+
+        controller = new PIDController(p, i, d);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
         telemetry.addLine("ready");
         telemetry.update();
 
@@ -89,7 +100,7 @@ public class TeleOpFSM extends LinearOpMode {
             double rightBackPower  = axial + lateral - yaw;
 
             // Normalize the values so no wheel power exceeds 100%
-            // This ensures that the robot maintains the desired motion.
+            //  ensures that the robot maintains the desired motion.
             max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
             max = Math.max(max, Math.abs(leftBackPower));
             max = Math.max(max, Math.abs(rightBackPower));
@@ -100,15 +111,7 @@ public class TeleOpFSM extends LinearOpMode {
                 leftBackPower   /= max;
                 rightBackPower  /= max;
             }
-
-            double slow_multiplier = 1.0;
-            if (gamepad1.right_bumper){
-                slow_multiplier = 0.6;
-            }
-            else if (gamepad1.right_bumper){
-                slow_multiplier = 1.0;
-            }
-            //double slow_multiplier = Math.max(1- gamepad1.right_bumper,0.3);
+            double slow_multiplier = Math.max(1-gamepad1.right_trigger,0.3);
             // Send calculated power to wheels
             FrontLeftMotor.setPower(leftFrontPower * .5*slow_multiplier);
             FrontRightMotor.setPower(rightFrontPower * .5*slow_multiplier);
@@ -122,6 +125,7 @@ public class TeleOpFSM extends LinearOpMode {
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
 
             total();
+
             boolean grabber_open =  true;
             if (gamepad1.left_bumper && grabber_open == true) { //close grabber
                 Grabber.setPosition(closePosition);
@@ -130,8 +134,9 @@ public class TeleOpFSM extends LinearOpMode {
                 Grabber.setPosition(openPosition);
                 grabber_open = true;
             }
-
         }
+
+        LSMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
     public void controller2Buttons () {
         if (gamepad2.a){
@@ -151,16 +156,16 @@ public class TeleOpFSM extends LinearOpMode {
     public void moveToState(){
         switch (DEPOSIT_STATES){
             case 0:
-                PIDTarget(groundEncoderCount, this);
+                PIDTarget2(groundEncoderCount);
                 break;
             case 1:
-                PIDTarget(lowEncoderCount, this);
+                PIDTarget2(lowEncoderCount);
                 break;
             case 2:
-                PIDTarget(medEncoderCount, this);
+                PIDTarget2(medEncoderCount);
                 break;
             case 3:
-                PIDTarget(topEncoderCount, this);
+                PIDTarget2(topEncoderCount);
                 break;
         }
     }
@@ -169,6 +174,22 @@ public class TeleOpFSM extends LinearOpMode {
         controller2Buttons();
         moveToState();
     }
+    
+    public void PIDTarget2(int target) {
+        controller.setPID(p, i, d);
+        int armPos = -LSMotor1.getCurrentPosition();
+        double output = controller.calculate(armPos, target);
+        double ff = Math.cos(Math.toRadians(target / ticks_in_degrees)) * f;
 
+        double power = output;
+
+        LSMotor1.setPower(power/3);
+        LSMotor2.setPower(power/3);
+
+        telemetry.addData("pos: ", armPos);
+        telemetry.addData("target ", target);
+        telemetry.update();
+
+    }
 
 }

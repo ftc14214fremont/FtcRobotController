@@ -42,8 +42,8 @@ public class RoadrunnerPrevious extends LinearOpMode {
     // coordinates
     public static double junctionX = -6.1;
     public static double junctionY = -30;
-    public static double coneX = -4.7;
-    public static double coneY = -66.3;
+    public static double coneX = -4.7; // increase x to go forward
+    public static double coneY = -66.3; // decrease y to go to the right
     public static double backDistance = 5;
 
     @Override

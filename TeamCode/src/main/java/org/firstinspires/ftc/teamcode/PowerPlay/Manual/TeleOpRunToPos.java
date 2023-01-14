@@ -44,7 +44,7 @@ public class TeleOpRunToPos extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
-    double prevTime = runtime.milliseconds();
+    double prevTime = runtime.seconds();
     @Override
     public void runOpMode() {
 
@@ -55,9 +55,12 @@ public class TeleOpRunToPos extends LinearOpMode {
         LSMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         int currentPosition = LSMotor1.getCurrentPosition();
-
+        double runToPos = LSMotor1.getCurrentPosition();
+        double height_inc_rate = 0.5; //inches/sec
         int zeroPosition = LSMotor1.getCurrentPosition();
+        LSMotor1.setTargetPosition(zeroPosition);
         LSMotor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -65,6 +68,8 @@ public class TeleOpRunToPos extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        Boolean open= true;
+        Boolean buttonPressed = false;
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             double max;
@@ -123,9 +128,9 @@ public class TeleOpRunToPos extends LinearOpMode {
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
 
-            int increase_amount;
+            double increase_amount; // encoder ticks
             if (gamepad2.left_stick_y < -0.3 || gamepad2.left_stick_y > 0.3) { //left go up
-                increase_amount = -Math.round(gamepad2.left_stick_y) * 100;
+                increase_amount = Math.round(-gamepad2.left_stick_y * height_inc_rate * 145.1/(2 * Math.PI * 20 * 25.4));
 //                setSlidesVelocity(LSMotor1, 0.8);
 //                setSlidesVelocity(LSMotor2, 0.8);
 //            } else if (gamepad2.left_stick_y > 0.3) { // down retract
@@ -140,18 +145,31 @@ public class TeleOpRunToPos extends LinearOpMode {
             else{
                 increase_amount = 0;
             }
-            double deltaTime = runtime.milliseconds()-prevTime;
-            int newPos = Math.max(currentPosition+(int) Math.round(increase_amount*deltaTime),zeroPosition);
+            double deltaTime = (runtime.seconds()-prevTime)/1000; //seconds
+            runToPos = Math.max(runToPos+(increase_amount*deltaTime),zeroPosition);
 
-            LSMotor1.setTargetPosition(newPos);
-            LSMotor2.setTargetPosition(newPos);
+//            LSMotor1.setTargetPosition((int) runToPos);
+//            LSMotor2.setTargetPosition((int) runToPos);
 
 
-            if (gamepad2.a) { //close grabber
-                Grabber.setPosition(closePosition);
-            } else if (gamepad2.b) { //open grabber
-                Grabber.setPosition(openPosition);
+            if (gamepad2.a && !buttonPressed) { //close grabber
+                buttonPressed = false;
+                if (open) {
+                    Grabber.setPosition(closePosition);
+                    open = false;
+
+                }
+                else{
+                    Grabber.setPosition(openPosition);
+                    open = true;
+                }
             }
+            else{
+                buttonPressed = true;
+            }
+//            } else if (gamepad2.b) { //open grabber
+//                Grabber.setPosition(openPosition);
+//            }
 
 //            if (gamepad2.x) { //break motor
 //                LSMotor1.setZeroPowerBehavior(BRAKE);
@@ -165,10 +183,12 @@ public class TeleOpRunToPos extends LinearOpMode {
 //                setSlidesVelocity(LSMotor2, 0.1);
 //            }
 
-            telemetry.addLine("pos: " + currentPosition);
+            telemetry.addLine("Current Pos: " + currentPosition);
+            telemetry.addLine("Target Pos: " + runToPos);
+
             telemetry.update();
             currentPosition = LSMotor1.getCurrentPosition();
-            prevTime = runtime.milliseconds();
+            prevTime = runtime.seconds();
         }
     }
 }

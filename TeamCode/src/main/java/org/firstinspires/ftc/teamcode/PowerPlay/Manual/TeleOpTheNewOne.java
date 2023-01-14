@@ -7,15 +7,22 @@ import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.SetVelocity.setSl
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @TeleOp
-public class TeleOpTheOldOne extends LinearOpMode {
+public class TeleOpTheNewOne extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
+
+
     @Override
     public void runOpMode() {
         initializeNvyusRobotHardware(this);
+
+        LSMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        double currentPosition = LSMotor1.getCurrentPosition();
+
         telemetry.addLine("ready");
         telemetry.update();
 
@@ -62,11 +69,21 @@ public class TeleOpTheOldOne extends LinearOpMode {
             //linear slide + servo code
 
             if (gamepad2.left_bumper) { //left go up
-                setSlidesVelocity(LSMotor1, 0.8);
-                setSlidesVelocity(LSMotor2, 0.8);
+                if (currentPosition < 300) {
+                    setSlidesVelocity(LSMotor1, 0.3);
+                    setSlidesVelocity(LSMotor2, 0.3);
+                }
+                else if (currentPosition < 700) {
+                    setSlidesVelocity(LSMotor1, 0.7);
+                    setSlidesVelocity(LSMotor2, 0.7);
+                }
+                else {
+                    setSlidesVelocity(LSMotor1, 0.9);
+                    setSlidesVelocity(LSMotor2, 0.9 );
+                }
             } else if (gamepad2.right_bumper) { //tap to make linear slide stop during retract
-                setSlidesVelocity(LSMotor1, -0.4);
-                setSlidesVelocity(LSMotor2, -0.4);
+                setSlidesVelocity(LSMotor1, -0.1);
+                setSlidesVelocity(LSMotor2, -0.1);
             }
             else {
                 LSMotor1.setZeroPowerBehavior(FLOAT);
@@ -81,6 +98,8 @@ public class TeleOpTheOldOne extends LinearOpMode {
             else if (gamepad2.b) { //open grabber
                 Grabber.setPosition(openPosition);
             }
+
+            currentPosition = LSMotor1.getCurrentPosition();
             telemetry.addLine("position: " + LSMotor1.getCurrentPosition());
             telemetry.update();
 
