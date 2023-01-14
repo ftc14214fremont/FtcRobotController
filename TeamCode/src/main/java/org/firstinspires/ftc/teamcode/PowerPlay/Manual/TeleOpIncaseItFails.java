@@ -18,7 +18,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @TeleOp
-public class TeleOpTheOldOne extends LinearOpMode {
+public class TeleOpIncaseItFails extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     @Override
     public void runOpMode() {
@@ -67,8 +67,8 @@ public class TeleOpTheOldOne extends LinearOpMode {
 
             //linear slide + servo code
 
-            if (gamepad2.left_bumper) { //left go up
-                setSlidesVelocity(LSMotor1, 0.8);
+            if (gamepad2.left_stick_y>0) { //left go up
+                setSlidesVelocity(LSMotor1, gamepad2.left_stick_y);
                 setSlidesVelocity(LSMotor2, 0.8);
             } else if (gamepad2.right_bumper) { //tap to make linear slide stop during retract
                 setSlidesVelocity(LSMotor1, -0.4);

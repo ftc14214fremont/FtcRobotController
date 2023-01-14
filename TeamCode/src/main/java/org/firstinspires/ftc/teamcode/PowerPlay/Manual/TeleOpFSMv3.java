@@ -7,14 +7,14 @@
  * Redistributions of source code must retain the above copyright notice,  list
  * of conditions and the following disclaimer.
  *
- * Redistributions in binary form must reproduce the above copyright notice, 
+ * Redistributions in binary form must reproduce the above copyright notice,
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
  * Neither the name of FIRST nor the names of its contributors may be used to endorse or
  * promote products derived from  software without specific prior written permission.
  *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY 
+ * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY
  * LICENSE.  SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -29,6 +29,7 @@
 package org.firstinspires.ftc.teamcode.PowerPlay.Manual;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT;
+import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.Constants.closePosition;
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.Constants.lowEncoderCount;
 import static org.firstinspires.ftc.teamcode.PowerPlay.Helpers.Constants.medEncoderCount;
@@ -55,7 +56,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Config
 @TeleOp
-public class TeleOpFSMv2 extends LinearOpMode {
+public class TeleOpFSMv3 extends LinearOpMode {
 
     private PIDController controller;
 
@@ -65,7 +66,7 @@ public class TeleOpFSMv2 extends LinearOpMode {
     double ticks_in_degrees = 360 / 145.1;
 
     public static int target1 = lowEncoderCount;
-    
+
     int DEPOSIT_STATES = 0;
     // 0 = ground
     // 1 = low
@@ -93,7 +94,8 @@ public class TeleOpFSMv2 extends LinearOpMode {
 
         waitForStart();
         runtime.reset();
-
+        Boolean open= true;
+        Boolean buttonPressed = false;
         while (opModeIsActive()) {
             double max;
 
@@ -135,16 +137,30 @@ public class TeleOpFSMv2 extends LinearOpMode {
 
             telemetry.addData("pos: ", currentPosition); // added this line and cut from PID function
             telemetry.addData("target ", target1);
-            telemetry.update();
 
 
 
             total(currentPosition);
 
-            if (gamepad1.left_bumper) { //close grabber
-                Grabber.setPosition(closePosition);
-            } else if (gamepad1.left_trigger > 0) { //open grabber
-                Grabber.setPosition(openPosition);
+//            if (gamepad1.left_bumper) { //close grabber
+//                Grabber.setPosition(closePosition);
+//            } else if (gamepad1.left_trigger > 0) { //open grabber
+//                Grabber.setPosition(openPosition);
+//            }
+            if (gamepad2.a && !buttonPressed) { //close grabber
+                buttonPressed = false;
+                if (open) {
+                    Grabber.setPosition(closePosition);
+                    open = false;
+
+                }
+                else{
+                    Grabber.setPosition(openPosition);
+                    open = true;
+                }
+            }
+            else{
+                buttonPressed = true;
             }
 
         }
@@ -152,18 +168,19 @@ public class TeleOpFSMv2 extends LinearOpMode {
         LSMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
     public void controller2Buttons () {
-        if (gamepad2.a){
-            DEPOSIT_STATES = 0;
-        }
-        if (gamepad2.x && DEPOSIT_STATES < 1){
-            DEPOSIT_STATES = 1;
-        }
-        if (gamepad2.b && DEPOSIT_STATES < 2){
-            DEPOSIT_STATES = 2;
-        }
-        if (gamepad2.y && DEPOSIT_STATES < 3){
-            DEPOSIT_STATES = 3;
-        }
+//        if (gamepad2.a){
+//            DEPOSIT_STATES = 0;
+//        }
+//        if (gamepad2.x && DEPOSIT_STATES < 1){
+//            DEPOSIT_STATES = 1;
+//        }
+//        if (gamepad2.b && DEPOSIT_STATES < 2){
+//            DEPOSIT_STATES = 2;
+//        }
+//        if (gamepad2.y && DEPOSIT_STATES < 3){
+//            DEPOSIT_STATES = 3;
+//        }
+        ;
     }
 
     public void moveToState(double pos){
@@ -187,7 +204,7 @@ public class TeleOpFSMv2 extends LinearOpMode {
                     setSlidesVelocity(LSMotor2, -0.1);
                 }
                 else {
-                    LSMotor1.setZeroPowerBehavior(FLOAT);
+                    LSMotor1.setZeroPowerBehavior(BRAKE);
                     setSlidesVelocity(LSMotor1, 0);
                     setSlidesVelocity(LSMotor2, 0);
                 }
@@ -195,21 +212,21 @@ public class TeleOpFSMv2 extends LinearOpMode {
                 break;
             case 1: // when a is pressed
                 if (pos <= lowEncoderCount + 50) { //50 is the tolerance
-                        PIDTarget2(lowEncoderCount);
+                    PIDTarget2(lowEncoderCount);
 
                     break;
                 }
                 break;
             case 2:
                 if (pos <= medEncoderCount + 50) {
-                        PIDTarget2(medEncoderCount);
+                    PIDTarget2(medEncoderCount);
 
                     break;
                 }
                 break;
             case 3:
                 if (pos <= topEncoderCount + 50) {
-                     PIDTarget2(topEncoderCount);
+                    PIDTarget2(topEncoderCount);
                     break;
                 }
                 break;
@@ -221,7 +238,7 @@ public class TeleOpFSMv2 extends LinearOpMode {
         controller2Buttons();
         moveToState(pos1);
     }
-    
+
     public void PIDTarget2(int target) {
         controller.setPID(p, i, d);
         int armPos = -LSMotor1.getCurrentPosition();
