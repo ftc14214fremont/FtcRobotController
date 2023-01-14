@@ -180,7 +180,7 @@ public class TeleOpFSMv2 extends LinearOpMode {
                         setSlidesVelocity(LSMotor1, 0.8);
                         setSlidesVelocity(LSMotor2, 0.8 );
                     }
-                } else if (gamepad1.left_stick_y > 0.3) { //tap to make linear slide stop during retract
+                } else if (gamepad2.left_stick_y > 0.3) { //tap to make linear slide stop during retract
                     setSlidesVelocity(LSMotor1, -0.1);
                     setSlidesVelocity(LSMotor2, -0.1);
                 }
